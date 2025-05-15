@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body>
+    <div class="login-box">
+      <h1 id="login_head">Register</h1>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="user-box">
+          <input
+            type="text"
+            name="username"
+            required=""
+          />
+          <label>Username</label>
+        </div>
+        <div class="user-box">
+          <input
+            type="password"
+            name="password"
+            required=""
+          />
+          <label>Password</label>
+        </div>
+        <button type="submit" class="btn">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Register
+        </button>
+      </form>
+      <p style="margin-top: 20px; text-align: center; color: #605f5f;">
+        Already have an account? 
+        <a href="/auth/login/" style="color: #03e9f4; text-decoration: none;" id="login_link">
+          Login
+        </a>
+      </p>
+    </div>
+  </body>
+</html>
