@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}" />
   </head>
   <body>
+    {% if messages %}
+      {% for message in messages %}
+        <script>
+          alert("{{ message|escapejs }}");
+        </script>
+      {% endfor %}
+    {% endif %}
     <div class="login-box">
       <h1 id="login_head">Register</h1>
       <form method="post" enctype="multipart/form-data">

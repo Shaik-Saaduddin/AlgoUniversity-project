@@ -25,7 +25,7 @@ def register_user(request):
         user.save()
         
         messages.info(request,'User created successfully')
-        return redirect('/auth/register/')
+        return redirect('/problems/')
     
     template = loader.get_template('register.html')
     context = {}
@@ -39,7 +39,7 @@ def login_user(request):
 
         if not User.objects.filter(username=username).exists():
             messages.info(request,'User with this username does not exist')
-            return redirect('/auth/login/')
+            return redirect('/projects/')
         
         user = authenticate(username=username, password=password)
 
@@ -51,7 +51,7 @@ def login_user(request):
         login(request,user)
         messages.info(request,'login successful')
 
-        return redirect('/home/polls/')
+        return redirect('/problems/')
     
     template = loader.get_template('login.html')
     context ={}
