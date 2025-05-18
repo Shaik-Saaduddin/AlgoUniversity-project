@@ -1,13 +1,29 @@
+{% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Problems</title>
+    <link rel="stylesheet" href="{% static 'problemList.css' %}">
 </head>
 <body>
     {% include 'navbar.html' %}
     <h1>Problem List</h1>
-    
+    <ul style="list-style: none; padding: 0; margin: 0;">
+        {% for problem in problems %}
+        <li>
+            <div class="problem-box">
+                <strong>{{ problem.title }}</strong> - {{ problem.difficulty }}
+                <br>
+                {{ problem.description }}
+            </div>
+        </li>
+        {% empty %}
+        <li>
+            No problems available.
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
