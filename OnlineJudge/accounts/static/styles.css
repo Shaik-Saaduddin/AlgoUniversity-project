@@ -208,3 +208,18 @@ body {
         font-family: cursive;
       }
 
+
+nav {
+  width: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+  margin: 0;
+  z-index: 100;
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+}

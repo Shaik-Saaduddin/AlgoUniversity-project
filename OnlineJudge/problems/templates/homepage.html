@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>homepage</title>
+    <link rel="stylesheet" href="{% static 'homepage.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <h1 id="Title">Welcome to My Online judge.</h1>
+    <div class="main-text">
+        <p>Here you can solve problems and improve your coding skills.</p>
+        <p>Feel free to explore the problems and challenges available.</p>
+        <p>Happy coding!</p>
+    </div>
+    <button class="btn" type="button" onclick="window.location.href = '{% url "problem-list" %}'">Start Solving</button>
+</body>
+</html>

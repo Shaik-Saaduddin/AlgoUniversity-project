@@ -15,16 +15,14 @@ def register_user(request):
         user = User.objects.filter(username=username)
 
         if user.exists():
-            messages.info(request,'User with this username already exists')
+            messages.error(request,'User with this username already exists')
             return redirect("/auth/register/")
         
         user = User.objects.create_user(username=username)
-
         user.set_password(password)
-
         user.save()
         
-        messages.info(request,'User created successfully')
+        messages.success(request,'User created successfully')
         return redirect('/problems/')
     
     template = loader.get_template('register.html')
@@ -38,18 +36,21 @@ def login_user(request):
         password = request.POST.get('password')
 
         if not User.objects.filter(username=username).exists():
-            messages.info(request,'User with this username does not exist')
-            return redirect('/projects/')
+            messages.error(request,'User with this username does not exist')
+            return redirect('/auth/login/')
         
         user = authenticate(username=username, password=password)
 
         if user is None:
-            messages.info(request,'invalid password')
+            messages.error(request,'invalid password')
             return redirect('/auth/login')
         
 
         login(request,user)
-        messages.info(request,'login successful')
+        # Clear all previous messages
+        list(messages.get_messages(request))
+        # Now add the new message
+        messages.success(request, 'login successful')
 
         return redirect('/problems/')
     
@@ -59,5 +60,15 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.info(request,'logout successful')
+    list(messages.get_messages(request))  # Clear all previous messages
+    messages.success(request, 'Logout successful')
     return redirect('/auth/login/')
+
+def profile(request):
+    if request.user.is_authenticated:
+        template = loader.get_template('profile.html')
+        context = {}
+        return HttpResponse(template.render(context,request))
+    else:
+        messages.error(request,'You are not logged in')
+        return redirect('/auth/login/')
