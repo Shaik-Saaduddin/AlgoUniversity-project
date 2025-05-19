@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ problem.title }}</title>
+    <link rel="stylesheet" href="{% static 'problem.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <div class="left-half">
+            <div class="problem-title">{{ problem.title }}</div>
+            <div class="problem-difficulty">{{ problem.difficulty }}</div>
+            <div class="problem-description">{{ problem.description }}</div>
+        </div>
+        <div class="right-half">
+            <!-- Compiler will go here in the future -->
+        </div>
+    </div>
+</body>
+</html>
