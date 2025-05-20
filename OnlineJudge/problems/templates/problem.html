@@ -15,7 +15,37 @@
             <div class="problem-description">{{ problem.description }}</div>
         </div>
         <div class="right-half">
-            <!-- Compiler will go here in the future -->
+            <form method="post" action="{% url 'submit' %}">
+                {% csrf_token %}
+                <input type="hidden" name="problem_id" value="{{ problem.id }}">
+                <div class="language-row">
+                    {{ form.language.label_tag }}
+                    {{ form.language }}
+                </div>
+                {{ form.code.label_tag }}
+                {{ form.code }}
+                <div class="io-row">
+                    <div class="input-box">
+                        {{ form.input_data.label_tag }}
+                        {{ form.input_data }}
+                    </div>
+                    <div class="output-box-container">
+                        <label style="color:#03e9f4;font-weight:bold; margin-bottom:6px;">Output</label>
+                        <div class="output-box">
+                            <pre>
+{% if action == "run" %}
+    {{ output }}
+{% endif %}
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" name="action" value="run" class="run-btn">Run Code</button>
+                <button type="submit" name="action" value="submit" class="submit-btn">Submit</button>
+            </form>
+            {% if action == "submit" and verdict %}
+                <div class="verdict {{ verdict|lower }}">{{ verdict }}</div>
+            {% endif %}
         </div>
     </div>
 </body>

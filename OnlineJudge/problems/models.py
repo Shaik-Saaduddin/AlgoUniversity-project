@@ -8,3 +8,11 @@ class Problem(models.Model):
 
     def __str__(self):
         return self.title
+    
+class TestCase(models.Model):
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='testcases')
+    input_data = models.TextField()
+    expected_output = models.TextField()
+
+    def __str__(self):
+        return f"TestCase for {self.problem.title}"

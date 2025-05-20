@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include("accounts.urls")),
     path("problems/", include("problems.urls")),
+    path("compiler/", include("compiler.urls")),  # <-- Add this line
     path('', include("problems.urls"))
 ]

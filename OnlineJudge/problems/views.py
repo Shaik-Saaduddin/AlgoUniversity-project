@@ -2,6 +2,7 @@ from django import template
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from problems.models import Problem
+from compiler.forms import CodeSubmissionForm
 
 # Create your views here.
 
@@ -14,4 +15,5 @@ def problem_list(request):
 
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
-    return render(request, 'problem.html', {'problem': problem})
+    form = CodeSubmissionForm()
+    return render(request, 'problem.html', {'problem': problem, 'form': form})

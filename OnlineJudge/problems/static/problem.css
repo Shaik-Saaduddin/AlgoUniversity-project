@@ -9,8 +9,12 @@
 }
 .right-half {
     width: 50%;
-    background: transparent;
-    /* Reserved for future compiler */
+    padding: 40px;
+    box-sizing: border-box;
+    background: #23272e;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 .problem-title {
     font-size: 2rem;
@@ -26,6 +30,28 @@
     font-size: 1.1rem;
     line-height: 1.6;
 }
+.output-box {
+    background: #181c22;
+    color: #03e9f4;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 90px;
+    font-size: 1.1rem;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1.5px solid #03e9f4;
+    flex: 1 1 0;
+    display: flex;
+    align-items: flex-start;
+}
+.output-box pre {
+    max-width: 32ch;      /* Optional: restrict max width */
+    min-height: 90px;
+    font-family: 'Fira Mono', 'Consolas', monospace;
+    font-size: 1.08rem;
+    resize: vertical;
+    box-sizing: border-box;
+}
 body {
         margin: 0;
         padding: 0;
@@ -34,3 +60,143 @@ body {
         height: 100vh;
         color: #fff;
       }
+
+form label {
+    color: #03e9f4;
+    font-weight: bold;
+    margin-bottom: 6px;
+    display: block;
+    font-size: 1.08rem;
+    letter-spacing: 0.5px;
+}
+
+
+textarea, input[type="text"] {
+    width: 100%;
+    min-height: 140px;
+    font-family: 'Fira Mono', 'Consolas', monospace;
+    font-size: 1.08rem;
+    background: #181c22;
+    color: #03e9f4;
+    border: 1.5px solid #03e9f4;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 22px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    resize: vertical;
+    box-shadow: 0 2px 12px 0 rgba(3,233,244,0.04);
+}
+
+textarea:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #00bcd4;
+    background: #23272e;
+    box-shadow: 0 0 12px #03e9f4aa;
+}
+
+
+textarea[name="code"] {
+    min-height: 240px;
+}
+
+textarea[name="input_data"] {
+    min-height: 60px;   
+    max-height: 90px;   
+}
+
+.language-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.language-row label {
+    margin-right: 12px;
+    margin-bottom: 0;
+    color: #03e9f4;
+    font-weight: bold;
+    font-size: 1.08rem;
+    letter-spacing: 0.5px;
+}
+
+.language-row select {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1.5px solid #03e9f4;
+    background: #181c22;
+    color: #03e9f4;
+    font-size: 1.08rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-left: 0;
+}
+
+.language-row select:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 8px #03e9f4aa;
+}
+
+button[type="submit"] {
+    background: #e53935;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 16px 0 #e53935cc, 0 2px 8px rgba(229,57,53,0.08);
+}
+
+button[type="submit"]:hover {
+    background: #b71c1c;
+    box-shadow: 0 0 24px 4px #e53935, 0 4px 16px #e5393555;
+}
+
+button.submit-btn, .submit-btn {
+    background: #27ae60 !important;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    margin-left: 12px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 16px 2px #27ae60cc, 0 2px 8px rgba(39,174,96,0.08);
+}
+button.submit-btn:hover, .submit-btn:hover {
+    background: #2ecc40 !important;
+    box-shadow: 0 0 32px 8px #2ecc40, 0 0 16px 4px #27ae60cc;
+    filter: brightness(1.15);
+}
+
+.io-row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    height: 140px; /* Set the desired height for both boxes */
+}
+
+.input-box,
+.output-box-container {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.input-box textarea,
+.output-box pre {
+    height: 100%;
+    min-height: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-family: 'Fira Mono', 'Consolas', monospace;
+    font-size: 1.08rem;
+    resize: none; /* Prevent resizing to keep heights equal */
+}
