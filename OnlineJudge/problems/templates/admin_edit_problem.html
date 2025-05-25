@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Edit Problem</title>
+    <link rel="stylesheet" href="{% static 'admin_problems.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Edit Problem: {{ problem.title }}</h1>
+            <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">
+                <i class="icon">←</i> Back to Problems
+            </a>
+        </div>
+        
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post" class="problem-form">
+            {% csrf_token %}
+            
+            <div class="form-section">
+                <h2>Problem Details</h2>
+                
+                <div class="form-group">
+                    <label for="{{ problem_form.title.id_for_label }}">Title:</label>
+                    {{ problem_form.title }}
+                    {% if problem_form.title.errors %}
+                        <div class="error">{{ problem_form.title.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ problem_form.difficulty.id_for_label }}">Difficulty:</label>
+                    {{ problem_form.difficulty }}
+                    {% if problem_form.difficulty.errors %}
+                        <div class="error">{{ problem_form.difficulty.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ problem_form.description.id_for_label }}">Description:</label>
+                    {{ problem_form.description }}
+                    {% if problem_form.description.errors %}
+                        <div class="error">{{ problem_form.description.errors }}</div>
+                    {% endif %}
+                    <small class="help-text">Use HTML tags for formatting. Include problem statement, examples, and constraints.</small>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Test Cases</h2>
+                <p class="help-text">Modify existing test cases or add new ones. At least one test case is required.</p>
+                
+                {{ testcase_formset.management_form }}
+                
+                <div id="testcase-forms">
+                    {% for form in testcase_formset %}
+                        <div class="testcase-form">
+                            <h3>Test Case {{ forloop.counter }}</h3>
+                            {% if form.non_field_errors %}
+                                <div class="error">{{ form.non_field_errors }}</div>
+                            {% endif %}
+                            
+                            <div class="testcase-row">
+                                <div class="form-group">
+                                    <label for="{{ form.input_data.id_for_label }}">Input:</label>
+                                    {{ form.input_data }}
+                                    {% if form.input_data.errors %}
+                                        <div class="error">{{ form.input_data.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.expected_output.id_for_label }}">Expected Output:</label>
+                                    {{ form.expected_output }}
+                                    {% if form.expected_output.errors %}
+                                        <div class="error">{{ form.expected_output.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if form.DELETE %}
+                                <div class="delete-checkbox">
+                                    {{ form.DELETE }}
+                                    <label for="{{ form.DELETE.id_for_label }}">Delete this test case</label>
+                                </div>
+                            {% endif %}
+                            
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="button" id="add-testcase" class="btn btn-secondary">Add Another Test Case</button>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Problem</button>
+                <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // JavaScript for dynamic test case addition (same as add problem)
+        document.getElementById('add-testcase').addEventListener('click', function() {
+            const formContainer = document.getElementById('testcase-forms');
+            const totalForms = document.getElementById('id_testcases-TOTAL_FORMS');
+            const formNum = parseInt(totalForms.value);
+            
+            const newForm = document.querySelector('.testcase-form').cloneNode(true);
+            
+            // Update form numbers in the new form
+            newForm.innerHTML = newForm.innerHTML.replace(/testcases-\d+/g, `testcases-${formNum}`);
+            newForm.querySelector('h3').textContent = `Test Case ${formNum + 1}`;
+            
+            // Clear the values in the new form
+            newForm.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
+            
+            formContainer.appendChild(newForm);
+            totalForms.value = formNum + 1;
+        });
+    </script>
+</body>
+</html>

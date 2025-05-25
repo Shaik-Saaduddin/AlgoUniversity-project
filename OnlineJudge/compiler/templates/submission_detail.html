@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Submission #{{ submission.id }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'submission_detail.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('pre code').forEach((el) => {
+            hljs.highlightElement(el);
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="submission-detail-container">
+    <div class="submission-header">
+        <h1>Submission #{{ submission.id }}</h1>
+        <div class="submission-meta">
+            <div class="meta-item">
+                <span class="meta-label">User:</span>
+                <span class="meta-value">{{ submission.user.username }}</span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-label">Problem:</span>
+                <span class="meta-value">
+                    {% if submission.problem %}
+                        <a href="{% url 'problem-detail' submission.problem.id %}">
+                            {{ submission.problem.title }}
+                        </a>
+                    {% else %}
+                        Custom Code
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-label">Language:</span>
+                <span class="meta-value">
+                    {% for lang_code, lang_name in submission.LANGUAGE_CHOICES %}
+                        {% if submission.language == lang_code %}
+                            {{ lang_name }}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-label">Status:</span>
+                <span class="meta-value">
+                    {% if submission.is_correct %}
+                        <span class="status-badge status-accepted">Accepted</span>
+                    {% else %}
+                        <span class="status-badge status-failed">Failed</span>
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-label">Execution Time:</span>
+                <span class="meta-value">{{ submission.execution_time|floatformat:3 }}s</span>
+            </div>
+            
+            <div class="meta-item">
+                <span class="meta-label">Submitted:</span>
+                <span class="meta-value">{{ submission.timestamp|date:"M d, Y H:i:s" }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="submission-code-section">
+        <h2>Code</h2>
+        <div class="code-container">
+            <pre><code class="{% if submission.language == 'python' %}python{% elif submission.language == 'java' %}java{% elif submission.language == 'cpp' %}cpp{% elif submission.language == 'c' %}c{% endif %}">{{ submission.code }}</code></pre>
+        </div>
+    </div>
+    
+    {% if submission.input_data or submission.output_data %}
+    <div class="submission-io-section">
+        <div class="io-container">
+            {% if submission.input_data %}
+            <div class="input-section">
+                <h3>Input</h3>
+                <pre>{{ submission.input_data }}</pre>
+            </div>
+            {% endif %}
+            
+            {% if submission.output_data %}
+            <div class="output-section">
+                <h3>Output</h3>
+                <pre>{{ submission.output_data }}</pre>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="submission-actions">
+        <a href="{% url 'user-submissions' submission.user.id %}" class="back-button">Back to Submissions</a>
+        
+        {% if submission.problem %}
+        <a href="{% url 'problem-detail' submission.problem.id %}" class="problem-button">View Problem</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

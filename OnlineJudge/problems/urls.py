@@ -1,8 +1,9 @@
 from django.urls import path
-from problems.views import problem_list, home_page, problem_detail
+from . import views
 
 urlpatterns = [
-    path("problemlist/", problem_list, name="problem-list"),
-    path('',home_page, name="home-page"),
-    path('problems/<int:problem_id>/', problem_detail, name='problem-detail'),
+    path('', views.home_page, name='home-page'),
+    path('list/', views.problem_list, name='problem-list'),
+    path('<int:problem_id>/', views.problem_detail, name='problem-detail'),
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
 ]

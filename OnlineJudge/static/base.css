@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    background: #23272f;
+    color: #fff;
+    min-height: 100vh;
+}
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 32px 16px;
+}
+
+a {
+    color: #03e9f4;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover {
+    color: #00bcd4;
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #fff;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #23272f;
+    color: #fff;
+}
+
+th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #444857;
+    text-align: left;
+}
+
+th {
+    background: #23272f;
+    font-weight: 700;
+}
+
+tr:nth-child(even) {
+    background: #262b34;
+}
+
+.status-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    display: inline-block;
+}
+.status-accepted {
+    background: #1e824c;
+    color: #b8ffda;
+}
+.status-failed {
+    background: #b71c1c;
+    color: #ffd6d6;
+}
+
+button, .btn, .filter-button, .reset-button, .view-button, .back-button, .problem-button {
+    background: #03e9f4;
+    color: #23272f;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    margin-right: 8px;
+    text-decoration: none;
+    display: inline-block;
+}
+button:hover, .btn:hover, .filter-button:hover, .reset-button:hover, .view-button:hover, .back-button:hover, .problem-button:hover {
+    background: #00bcd4;
+    color: #fff;
+}
+
+input, select {
+    background: #23272f;
+    color: #fff;
+    border: 1px solid #444857;
+    border-radius: 4px;
+    padding: 7px 10px;
+    font-size: 1em;
+    margin-right: 8px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #03e9f4;
+}
+
+.pagination {
+    margin: 24px 0 0 0;
+    text-align: center;
+}
+.pagination .step-links a {
+    color: #03e9f4;
+    margin: 0 6px;
+    text-decoration: none;
+}
+.pagination .step-links .current {
+    color: #fff;
+    font-weight: 600;
+    margin: 0 8px;
+}
+
+.no-submissions, .no-problem-message {
+    text-align: center;
+    color: #bbb;
+    margin: 40px 0;
+    font-size: 1.2em;
+}

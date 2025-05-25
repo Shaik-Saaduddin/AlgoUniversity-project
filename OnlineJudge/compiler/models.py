@@ -1,11 +1,28 @@
 from django.db import models
+from django.contrib.auth.models import User
 from problems.models import Problem
 
-# Create your models here.
 class CodeSubmission(models.Model):
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True, blank=True)
-    language = models.CharField(max_length=100)
+    LANGUAGE_CHOICES = [
+        ('python', 'Python'),
+        ('cpp', 'C++'),
+        ('java', 'Java'),
+        ('c', 'C'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='submissions')
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True, blank=True, related_name='submissions')
+    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     code = models.TextField()
-    input_data = models.TextField(blank=True, null=True)
-    output_data = models.TextField(blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    output = models.TextField(blank=True)
+    error_message = models.TextField(blank=True)
+    execution_time = models.FloatField(default=0.0)
+    is_correct = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-submitted_at']
+    
+    def __str__(self):
+        problem_name = self.problem.title if self.problem else "No Problem"
+        return f"{self.user.username} - {problem_name} ({self.language})"

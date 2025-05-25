@@ -3,50 +3,639 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ problem.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ problem.title }} - AlgoU</title>
     <link rel="stylesheet" href="{% static 'problem.css' %}">
+    <!-- CodeMirror for code editor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #23272f;
+            color: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .problem-section {
+            width: 50%;
+            padding: 20px;
+            overflow-y: auto;
+            background: #23272f;
+            border-right: 1px solid #444857;
+        }
+
+        .code-section {
+            width: 50%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background: #23272f;
+            color: #ffffff;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .code-header h2 {
+            margin: 0;
+            color: white;
+        }
+        
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .language-selector label {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .language-selector select {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background: #2d2d2d;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .code-editor-container {
+            flex: 1;
+            min-height: 400px;
+            max-height: 400px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .input-output-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 0; /* Remove bottom margin */
+            height: 180px;
+            align-items: stretch;
+        }
+        
+        .input-section, .output-section {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .input-section h3, .output-section h3 {
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .input-section textarea {
+            flex: 1;
+            min-height: 0;
+            box-sizing: border-box;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: none;
+            background: #1a1a1a;
+            color: #ffffff;
+            outline: none;
+        }
+        
+        .input-section textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        .input-section textarea::placeholder {
+            color: #888;
+        }
+        
+        .output-container {
+            flex: 1;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: #1a1a1a;
+            color: #ffffff;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .output-container.success {
+            border-color: #28a745;
+            background-color: #0d2818;
+            color: #ffffff;
+        }
+        
+        .output-container.error {
+            border-color: #dc3545;
+            background-color: #2d1b1b;
+            color: #ff6b6b;
+        }
+        
+        .output-container.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .execution-info {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-end;
+            width: 100%;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .run-btn {
+            background: #007bff;
+            color: white;
+        }
+        
+        .run-btn:hover:not(:disabled) {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        .run-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .submit-btn {
+            background: #28a745;
+            color: white;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background: #1e7e34;
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Problem section styling */
+        .problem-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+        
+        .problem-meta {
+            margin-bottom: 24px;
+        }
+        
+        .difficulty {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        
+        .difficulty.easy {
+            background: #28a745;
+            color: #ffffff;
+        }
+        
+        .difficulty.medium {
+            background: #ffc107;
+            color: #000000;
+        }
+        
+        .difficulty.hard {
+            background: #dc3545;
+            color: #ffffff;
+        }
+        
+        .problem-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        
+        .problem-description h1,
+        .problem-description h2,
+        .problem-description h3,
+        .problem-description h4,
+        .problem-description h5,
+        .problem-description h6 {
+            color: #ffffff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .problem-description p {
+            margin-bottom: 15px;
+        }
+        
+        .problem-description code {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .problem-description pre {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #555;
+        }
+        
+        .problem-description ul,
+        .problem-description ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .problem-description li {
+            margin-bottom: 5px;
+        }
+        
+        .problem-description strong {
+            color: #ffffff;
+        }
+        
+        .problem-description em {
+            color: #cccccc;
+        }
+        
+        /* Scrollbar styling for webkit browsers */
+        .problem-section::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .problem-section::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+        
+        .problem-section::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        
+        .problem-section::-webkit-scrollbar-thumb:hover {
+            background: #666;
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .problem-section, .code-section {
+                width: 100%;
+            }
+            
+            .input-output-section {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .input-section, .output-section {
+                height: 150px;
+            }
+            .action-buttons {
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
     {% include 'navbar.html' %}
+    
     <div class="container">
-        <div class="left-half">
-            <div class="problem-title">{{ problem.title }}</div>
-            <div class="problem-difficulty">{{ problem.difficulty }}</div>
-            <div class="problem-description">{{ problem.description }}</div>
+        <div class="problem-section">
+            <h1 class="problem-title">{{ problem.title }}</h1>
+            <div class="problem-meta">
+                <span class="difficulty {{ problem.difficulty|lower }}">{{ problem.difficulty }}</span>
+            </div>
+            
+            <div class="problem-description">
+                {{ problem.description|safe }}
+            </div>
         </div>
-        <div class="right-half">
-            <form method="post" action="{% url 'submit' %}">
+        
+        <div class="code-section">
+            <div class="code-header">
+                <h2>Solution</h2>
+                <div class="language-selector">
+                    <label for="language">Language:</label>
+                    <select id="language-select">
+                        <option value="python">Python</option>
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                        <option value="c">C</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="code-editor-container">
+                <textarea id="code-editor" name="code"></textarea>
+                <input type="hidden" name="language" id="language-input" value="python">
+            </div>
+            
+            <div class="input-output-section">
+                <div class="input-section">
+                    <h3>Custom Input</h3>
+                    <textarea id="custom-input" placeholder="Enter your test input here..."></textarea>
+                </div>
+                <div class="output-section">
+                    <h3>Output</h3>
+                    <div id="output-container" class="output-container">
+                        Run your code to see the output here...
+                    </div>
+                    <div id="execution-info" class="execution-info"></div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button type="button" id="run-btn" class="btn run-btn">Run Code</button>
+                <button type="button" id="submit-btn" class="btn submit-btn">Submit Solution</button>
+            </div>
+            
+            <!-- Hidden form for submission -->
+            <form id="submit-form" method="post" action="{% url 'compiler' %}" style="display: none;">
                 {% csrf_token %}
                 <input type="hidden" name="problem_id" value="{{ problem.id }}">
-                <div class="language-row">
-                    {{ form.language.label_tag }}
-                    {{ form.language }}
-                </div>
-                {{ form.code.label_tag }}
-                {{ form.code }}
-                <div class="io-row">
-                    <div class="input-box">
-                        {{ form.input_data.label_tag }}
-                        {{ form.input_data }}
-                    </div>
-                    <div class="output-box-container">
-                        <label style="color:#03e9f4;font-weight:bold; margin-bottom:6px;">Output</label>
-                        <div class="output-box">
-                            <pre>
-{% if action == "run" %}
-    {{ output }}
-{% endif %}
-                            </pre>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" name="action" value="run" class="run-btn">Run Code</button>
-                <button type="submit" name="action" value="submit" class="submit-btn">Submit</button>
+                <input type="hidden" name="code" id="submit-code">
+                <input type="hidden" name="language" id="submit-language">
+                <input type="hidden" name="action" value="submit">
             </form>
-            {% if action == "submit" and verdict %}
-                <div class="verdict {{ verdict|lower }}">{{ verdict }}</div>
-            {% endif %}
         </div>
     </div>
+    
+    <script>
+        // Get CSRF token
+        function getCSRFToken() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfToken) {
+                return csrfToken.value;
+            }
+            // Fallback: get from cookie
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return '';
+        }
+        
+        // Initialize CodeMirror
+        const codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+            lineNumbers: true,
+            mode: 'text/x-python',
+            theme: 'dracula',
+            indentUnit: 4,
+            smartIndent: true,
+            tabSize: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            styleActiveLine: true,
+            foldGutter: true,
+            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+        });
+        
+        // Set fixed height to prevent shrinking
+        codeEditor.setSize(null, 400);
+        
+        // Language templates
+        const languageTemplates = {
+            python: `# Write your Python code here
+def main():
+    # Your solution goes here
+    pass
+
+if __name__ == "__main__":
+    main()
+`,
+            cpp: `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+    // Write your C++ code here
+    
+    return 0;
+}
+`,
+            java: `import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Write your Java code here
+        
+        scanner.close();
+    }
+}
+`,
+            c: `#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    // Write your C code here
+    
+    return 0;
+}
+`
+        };
+        
+        // Set initial template
+        codeEditor.setValue(languageTemplates.python);
+        
+        // Handle language change
+        const languageSelect = document.getElementById('language-select');
+        const languageInput = document.getElementById('language-input');
+        
+        languageSelect.addEventListener('change', function() {
+            const language = this.value;
+            languageInput.value = language;
+            
+            // Update CodeMirror mode based on language
+            if (language === 'python') {
+                codeEditor.setOption('mode', 'text/x-python');
+            } else if (language === 'cpp' || language === 'c') {
+                codeEditor.setOption('mode', 'text/x-c++src');
+            } else if (language === 'java') {
+                codeEditor.setOption('mode', 'text/x-java');
+            }
+            
+            // Set template code if editor is empty or user confirms
+            if (codeEditor.getValue().trim() === '' || confirm('Change to ' + language + ' template? This will replace your current code.')) {
+                codeEditor.setValue(languageTemplates[language]);
+            }
+        });
+        
+        // Set initial language value
+        languageInput.value = languageSelect.value;
+        
+        // Run Code functionality
+        document.getElementById('run-btn').addEventListener('click', async function() {
+            const code = codeEditor.getValue();
+            const language = languageSelect.value;
+            const customInput = document.getElementById('custom-input').value;
+            const outputContainer = document.getElementById('output-container');
+            const executionInfo = document.getElementById('execution-info');
+            const runBtn = this;
+            
+            if (!code.trim()) {
+                outputContainer.textContent = 'Error: No code provided';
+                outputContainer.className = 'output-container error';
+                return;
+            }
+            
+            // Show loading state
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running...';
+            outputContainer.textContent = 'Executing code...';
+            outputContainer.className = 'output-container loading';
+            executionInfo.textContent = '';
+            
+            try {
+                const response = await fetch('/compiler/run/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        language: language,
+                        input: customInput
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.error) {
+                        outputContainer.textContent = result.error;
+                        outputContainer.className = 'output-container error';
+                    } else {
+                        outputContainer.textContent = result.output || '(No output)';
+                        outputContainer.className = 'output-container success';
+                    }
+                    
+                    if (result.execution_time) {
+                        executionInfo.textContent = `Execution time: ${result.execution_time.toFixed(3)}s`;
+                    }
+                } else {
+                    outputContainer.textContent = result.error || 'An error occurred';
+                    outputContainer.className = 'output-container error';
+                }
+            } catch (error) {
+                outputContainer.textContent = 'Network error: ' + error.message;
+                outputContainer.className = 'output-container error';
+            } finally {
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run Code';
+            }
+        });
+        
+        // Submit Solution functionality
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            const code = codeEditor.getValue();
+            const language = languageSelect.value;
+            
+            if (!code.trim()) {
+                alert('Please write some code before submitting.');
+                return;
+            }
+            
+            // Set form values
+            document.getElementById('submit-code').value = code;
+            document.getElementById('submit-language').value = language;
+            
+            // Submit the form
+            document.getElementById('submit-form').submit();
+        });
+    </script>
 </body>
 </html>

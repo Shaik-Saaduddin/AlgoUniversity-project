@@ -8,13 +8,16 @@ body {
       }
 
       .problem-box {
-    background: rgba(255, 255, 255, 0.08); /* transparent box */
+     
+    background: rgba(255, 255, 255, 0.08);
     color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     margin: 18px 0;
     padding: 22px 32px;
-    width: 100%;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
     transition: 
         transform 0.2s cubic-bezier(.4,2,.6,1), 
         box-shadow 0.2s cubic-bezier(.4,2,.6,1),
@@ -27,6 +30,6 @@ body {
 .problem-box:hover {
     transform: scale(1.03);
     box-shadow: 0 4px 24px 0 #03e9f4, 0 2px 8px rgba(0,0,0,0.18);
-    background: rgba(3, 233, 244, 0.10); /* subtle glow effect */
+    background: rgba(3, 233, 244, 0.10);
     z-index: 2;
 }

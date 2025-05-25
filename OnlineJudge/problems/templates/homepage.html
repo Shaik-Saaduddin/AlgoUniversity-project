@@ -4,19 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>homepage</title>
+    <title>AlgoU - Online Judge</title>
     <link rel="stylesheet" href="{% static 'homepage.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     {% include 'navbar.html' %}
-    <div class="content">
-        <h1 id="Title">Welcome to My Online judge.</h1>
-        <div class="main-text">
-            <p>Here you can solve problems and improve your coding skills.</p>
-            <p>Feel free to explore the problems and challenges available.</p>
-            <p>Happy coding!</p>
+    
+    <div class="hero-section">
+        <h1 class="title">Welcome to AlgoU</h1>
+        <div class="subtitle">
+            <p>Master algorithms and data structures through hands-on coding challenges.</p>
+            <p>Solve problems, compete with others, and improve your programming skills.</p>
         </div>
-        <button class="btn" type="button" onclick="window.location.href = '{% url "problem-list" %}'">Start Solving</button>
+        <a href="{% url 'problem-list' %}" class="btn">Start Solving</a>
+    </div>
+    
+    <!-- Problem of the Day Section -->
+    <div class="problem-of-the-day">
+        <div class="potd-header">
+            <h2 class="potd-title">🌟 Problem of the Day</h2>
+            <div class="potd-date">{{ "now"|date:"F j, Y" }}</div>
+        </div>
+        
+        {% if problem_of_the_day %}
+            <div class="potd-problem">
+                <div class="potd-problem-title">
+                    {{ problem_of_the_day.title }}
+                    <span class="difficulty-badge difficulty-{{ problem_of_the_day.difficulty|lower }}">
+                        {{ problem_of_the_day.difficulty }}
+                    </span>
+                </div>
+                
+                <div class="potd-description">
+                    {{ problem_of_the_day.description|truncatewords:30|safe }}
+                </div>
+                
+                <div class="potd-actions">
+                    {% if user_solved_potd %}
+                        <div class="solved-indicator">
+                            <span>✅</span>
+                            <span>Already Solved!</span>
+                        </div>
+                        <a href="{% url 'problem-detail' problem_of_the_day.id %}" class="potd-btn solved">
+                            <span>🔄</span>
+                            Solve Again
+                        </a>
+                    {% else %}
+                        <a href="{% url 'problem-detail' problem_of_the_day.id %}" class="potd-btn">
+                            <span>🚀</span>
+                            Solve Now
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'problem-list' %}" class="potd-btn">
+                        <span>📋</span>
+                        View All Problems
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="no-problem-message">
+                <p>No problems available yet. Check back later!</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="features-section">
+        <div class="feature-card">
+            <h2 class="feature-title">Practice</h2>
+            <p class="feature-description">
+                Solve a variety of programming problems ranging from easy to hard difficulty levels.
+                Each problem is designed to test different aspects of your coding skills.
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <h2 class="feature-title">Learn</h2>
+            <p class="feature-description">
+                Improve your understanding of algorithms and data structures through practical application.
+                Get instant feedback on your solutions.
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <h2 class="feature-title">Compete</h2>
+            <p class="feature-description">
+                Compare your progress with other users on the leaderboard.
+                Challenge yourself to solve more problems and climb the rankings.
+            </p>
+        </div>
+    </div>
+    
+    <div class="leaderboard-section">
+        <h2 class="leaderboard-title">Top Performers</h2>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Problems Solved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in top_users %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.solved_count }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center;">No users have solved any problems yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'leaderboard' %}" class="view-all-btn">View Full Leaderboard →</a>
     </div>
 </body>
 </html>

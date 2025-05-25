@@ -1,0 +1,203 @@
+/* Submission Detail Page Styling */
+.submission-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.submission-header {
+  margin-bottom: 30px;
+}
+
+.submission-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Submission Metadata */
+.submission-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.meta-value {
+  font-size: 1rem;
+  color: #333;
+}
+
+.meta-value a {
+  color: #4a6cf7;
+  text-decoration: none;
+}
+
+.meta-value a:hover {
+  text-decoration: underline;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-accepted {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+}
+
+.status-failed {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Code Section */
+.submission-code-section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.submission-code-section h2 {
+  padding: 15px 20px;
+  margin: 0;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #eee;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.code-container {
+  padding: 0;
+  margin: 0;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.code-container pre {
+  margin: 0;
+  padding: 0;
+}
+
+.code-container code {
+  padding: 20px;
+  font-family: "Fira Code", "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Input/Output Section */
+.submission-io-section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.io-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.input-section,
+.output-section {
+  background-color: #f9fafc;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.input-section h3,
+.output-section h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.input-section pre,
+.output-section pre {
+  margin: 0;
+  padding: 10px;
+  background-color: #f0f2f5;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow: auto;
+}
+
+/* Action Buttons */
+.submission-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.back-button,
+.problem-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+.problem-button {
+  background-color: #4a6cf7;
+  color: white;
+  border: none;
+}
+
+.problem-button:hover {
+  background-color: #3a5ce5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .io-container {
+    grid-template-columns: 1fr;
+  }
+
+  .submission-meta {
+    grid-template-columns: 1fr;
+  }
+}

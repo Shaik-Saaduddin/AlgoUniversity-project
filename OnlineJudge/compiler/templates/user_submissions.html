@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ user_profile.username }}'s Submissions{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'submissions.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="submissions-container">
+    <div class="submissions-header">
+        <h1>{{ user_profile.username }}'s Submissions</h1>
+        
+        <div class="filter-section">
+            <form method="get" action="{% url 'user-submissions' user_profile.id %}" class="filter-form">
+                <div class="filter-group">
+                    <label for="problem">Problem:</label>
+                    <select name="problem" id="problem">
+                        <option value="">All Problems</option>
+                        {% for problem in problems %}
+                            <option value="{{ problem.id }}" {% if selected_problem == problem.id|stringformat:"i" %}selected{% endif %}>
+                                {{ problem.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="language">Language:</label>
+                    <select name="language" id="language">
+                        <option value="">All Languages</option>
+                        {% for lang_code, lang_name in languages %}
+                            <option value="{{ lang_code }}" {% if selected_language == lang_code %}selected{% endif %}>
+                                {{ lang_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        <option value="">All Status</option>
+                        <option value="correct" {% if selected_status == 'correct' %}selected{% endif %}>Accepted</option>
+                        <option value="incorrect" {% if selected_status == 'incorrect' %}selected{% endif %}>Failed</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="filter-button">Apply Filters</button>
+                <a href="{% url 'user-submissions' user_profile.id %}" class="reset-button">Reset</a>
+            </form>
+        </div>
+    </div>
+    
+    <div class="submissions-table-container">
+        {% if page_obj %}
+            <table class="submissions-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Problem</th>
+                        <th>Language</th>
+                        <th>Status</th>
+                        <th>Execution Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in page_obj %}
+                        <tr class="{% if submission.is_correct %}submission-correct{% else %}submission-incorrect{% endif %}">
+                            <td>{{ submission.id }}</td>
+                            <td>
+                                {% if submission.problem %}
+                                    <a href="{% url 'problem-detail' submission.problem.id %}">
+                                        {{ submission.problem.title }}
+                                    </a>
+                                {% else %}
+                                    Custom Code
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% for lang_code, lang_name in languages %}
+                                    {% if submission.language == lang_code %}
+                                        {{ lang_name }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="status-cell">
+                                {% if submission.is_correct %}
+                                    <span class="status-badge status-accepted">Accepted</span>
+                                {% else %}
+                                    <span class="status-badge status-failed">Failed</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ submission.execution_time|floatformat:3 }}s</td>
+                            <td>
+                                <a href="{% url 'submission-detail' submission.id %}" class="view-button">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if selected_problem %}&problem={{ selected_problem }}{% endif %}{% if selected_language %}&language={{ selected_language }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if selected_problem %}&problem={{ selected_problem }}{% endif %}{% if selected_language %}&language={{ selected_language }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">previous</a>
+                    {% endif %}
+                    
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                    
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if selected_problem %}&problem={{ selected_problem }}{% endif %}{% if selected_language %}&language={{ selected_language }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_problem %}&problem={{ selected_problem }}{% endif %}{% if selected_language %}&language={{ selected_language }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% else %}
+            <div class="no-submissions">
+                <p>No submissions found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

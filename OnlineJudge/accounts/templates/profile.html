@@ -1,12 +1,419 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-</head>
-<body>
-    {% include 'navbar.html' %}
-    This is profile page
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile - {{ request.user.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        border-radius: 12px;
+        color: white;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-right: 30px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .profile-info h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.5rem;
+        color: white;
+    }
+    
+    .profile-info p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+    }
+    
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background-color: #2d2d2d;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #444;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #03e9f4;
+        margin-bottom: 8px;
+    }
+    
+    .stat-label {
+        color: #ccc;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .progress-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .progress-card .stat-value {
+        color: white;
+    }
+    
+    .progress-card .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .streak-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    
+    .streak-card .stat-value {
+        color: white;
+    }
+    
+    .streak-card .stat-label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .profile-actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .action-button {
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .primary-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .primary-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .secondary-button {
+        background-color: #444;
+        color: #fff;
+        border: 2px solid #666;
+    }
+    
+    .secondary-button:hover {
+        background-color: #555;
+        transform: translateY(-1px);
+    }
+    
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .stats-card {
+        background-color: #2d2d2d;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #444;
+    }
+    
+    .stats-card h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #fff;
+        font-size: 1.3rem;
+    }
+    
+    .difficulty-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .difficulty-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        border-radius: 8px;
+        background-color: #3a3a3a;
+    }
+    
+    .difficulty-easy {
+        border-left: 4px solid #28a745;
+    }
+    
+    .difficulty-medium {
+        border-left: 4px solid #ffc107;
+    }
+    
+    .difficulty-hard {
+        border-left: 4px solid #dc3545;
+    }
+    
+    .difficulty-label {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .difficulty-count {
+        font-weight: bold;
+        color: #03e9f4;
+    }
+    
+    .language-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .language-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 6px;
+        background-color: #3a3a3a;
+    }
+    
+    .language-name {
+        font-weight: 500;
+        color: #fff;
+    }
+    
+    .language-count {
+        font-weight: bold;
+        color: #03e9f4;
+        font-size: 0.9rem;
+    }
+    
+    .recent-activity {
+        background-color: #2d2d2d;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #444;
+    }
+    
+    .recent-activity h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #fff;
+        font-size: 1.3rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #444;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-problem {
+        font-weight: 600;
+        color: #fff;
+    }
+    
+    .activity-status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .status-accepted {
+        background-color: #28a745;
+        color: #fff;
+    }
+    
+    .status-failed {
+        background-color: #dc3545;
+        color: #fff;
+    }
+    
+    .activity-empty {
+        text-align: center;
+        padding: 30px;
+        color: #777;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            margin-right: 0;
+            margin-bottom: 20px;
+        }
+        
+        .profile-stats {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+        
+        .stats-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {{ request.user.username.0|upper }}
+        </div>
+        <div class="profile-info">
+            <h1>{{ request.user.username }}</h1>
+            <p>Member since {{ request.user.date_joined|date:"F d, Y" }}</p>
+            <p>Favorite Language: {{ favorite_language|title }}</p>
+        </div>
+    </div>
+    
+    <div class="profile-stats">
+        <div class="stat-card">
+            <div class="stat-value">{{ solved_count|default:"0" }}</div>
+            <div class="stat-label">Problems Solved</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ submission_count|default:"0" }}</div>
+            <div class="stat-label">Total Submissions</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ acceptance_rate|default:"0" }}%</div>
+            <div class="stat-label">Acceptance Rate</div>
+        </div>
+        
+        <div class="stat-card progress-card">
+            <div class="stat-value">{{ progress_percentage|default:"0" }}%</div>
+            <div class="stat-label">Overall Progress</div>
+        </div>
+        
+        <div class="stat-card streak-card">
+            <div class="stat-value">{{ current_streak|default:"0" }}</div>
+            <div class="stat-label">Current Streak (Days)</div>
+        </div>
+    </div>
+    
+    <div class="profile-actions">
+        <a href="{% url 'user-submissions' request.user.id %}" class="action-button primary-button">View My Submissions</a>
+        <a href="{% url 'problem-list' %}" class="action-button secondary-button">Solve Problems</a>
+    </div>
+    
+    <div class="stats-section">
+        <div class="stats-card">
+            <h3>Problems by Difficulty</h3>
+            <div class="difficulty-stats">
+                <div class="difficulty-item difficulty-easy">
+                    <span class="difficulty-label">Easy</span>
+                    <span class="difficulty-count">{{ difficulty_stats.Easy }}</span>
+                </div>
+                <div class="difficulty-item difficulty-medium">
+                    <span class="difficulty-label">Medium</span>
+                    <span class="difficulty-count">{{ difficulty_stats.Medium }}</span>
+                </div>
+                <div class="difficulty-item difficulty-hard">
+                    <span class="difficulty-label">Hard</span>
+                    <span class="difficulty-count">{{ difficulty_stats.Hard }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-card">
+            <h3>Language Usage</h3>
+            <div class="language-stats">
+                {% for lang_stat in language_stats %}
+                    <div class="language-item">
+                        <span class="language-name">{{ lang_stat.language|title }}</span>
+                        <span class="language-count">{{ lang_stat.count }} submissions</span>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; color: #777;">No submissions yet</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="recent-activity">
+        <h3>Recent Activity</h3>
+        
+        {% if recent_submissions %}
+            {% for submission in recent_submissions %}
+                <div class="activity-item">
+                    <div>
+                        <div class="activity-problem">
+                            {% if submission.problem %}
+                                {{ submission.problem.title }}
+                            {% else %}
+                                Practice Submission
+                            {% endif %}
+                        </div>
+                        <small style="color: #666;">{{ submission.submitted_at|date:"M d, Y H:i" }} - {{ submission.language|title }}</small>
+                    </div>
+                    <span class="activity-status {% if submission.is_correct %}status-accepted{% else %}status-failed{% endif %}">
+                        {% if submission.is_correct %}Accepted{% else %}Failed{% endif %}
+                    </span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="activity-empty">
+                <p>No recent activity. Start solving problems!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
