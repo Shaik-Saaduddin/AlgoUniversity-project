@@ -446,6 +446,7 @@
     </div>
     
     <script>
+        const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
         // Get CSRF token
         function getCSRFToken() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
@@ -493,9 +494,7 @@ def main():
 if __name__ == "__main__":
     main()
 `,
-            cpp: `#include <iostream>
-#include <vector>
-#include <string>
+            cpp: `#include <bits/stc++.h>
 using namespace std;
 
 int main() {
@@ -558,6 +557,10 @@ int main() {
         
         // Run Code functionality
         document.getElementById('run-btn').addEventListener('click', async function() {
+            if (!isAuthenticated) {
+                window.location.href = "/auth/login/?next={{ request.path }}";
+                return;
+            }
             const code = codeEditor.getValue();
             const language = languageSelect.value;
             const customInput = document.getElementById('custom-input').value;
@@ -621,6 +624,10 @@ int main() {
         
         // Submit Solution functionality
         document.getElementById('submit-btn').addEventListener('click', function() {
+            if (!isAuthenticated) {
+                window.location.href = "/auth/login/?next={{ request.path }}";
+                return;
+            }
             const code = codeEditor.getValue();
             const language = languageSelect.value;
             
@@ -636,6 +643,9 @@ int main() {
             // Submit the form
             document.getElementById('submit-form').submit();
         });
+        
+        // Authenticated user check
+        
     </script>
 </body>
 </html>
