@@ -1,4 +1,7 @@
-/* Submissions Page Styling */
+body {
+    background: linear-gradient(#57606f, #2f3542);
+    min-height: 100vh;
+}
 .submissions-container {
   max-width: 1200px;
   margin: 0 auto;
