@@ -4,22 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="user-authenticated" content="{{ user.is_authenticated|yesno:'true,false' }}">
+    <meta name="problem-id" content="{{ problem.id }}">
+    <meta name="problem-title" content="{{ problem.title|escapejs }}">
+    <meta name="problem-description" content="{{ problem.description|striptags|escapejs }}">
+    
     <title>{{ problem.title }} - AlgoU</title>
-    <link rel="stylesheet" href="{% static 'problem.css' %}">
-    <!-- CodeMirror for code editor -->
+    
+    <!-- External CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/brace-fold.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
     
     <style>
@@ -99,7 +93,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-bottom: 0; /* Remove bottom margin */
+            margin-bottom: 0;
             height: 180px;
             align-items: stretch;
         }
@@ -111,12 +105,6 @@
             border: 1px solid #444;
             display: flex;
             flex-direction: column;
-        }
-        
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
         }
         
         .input-section h3, .output-section h3 {
@@ -380,42 +368,261 @@
                 margin-top: 10px;
             }
         }
+
+        /* AI Assist Styles */
+        .assist-btn {
+            background: #6f42c1;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            min-width: auto;
+            margin-left: 10px;
+        }
+
+        .assist-btn:hover:not(:disabled) {
+            background: #5a2d91;
+            transform: translateY(-1px);
+        }
+
+        .assist-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-assistance {
+            background: #2d2d2d;
+            border: 1px solid #6f42c1;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        .ai-assistance-header {
+            background: #6f42c1;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-assistance-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-assist {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .close-assist:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-content {
+            padding: 16px;
+            color: #e0e0e0;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #2d2d2d;
+            min-height: 150px;
+            border: 1px solid #444;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 40px 20px;
+            background: #2d2d2d;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-hint {
+            background: #1a1a1a;
+            border-left: 4px solid #6f42c1;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+
+        .ai-hint h4 {
+            margin: 0 0 8px 0;
+            color: #6f42c1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ai-hint p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .ai-hint div {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .ai-assistance[style*="display: block"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .ai-code {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            color: #f8f8f2;
+        }
+        
+        .ai-code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+        }
+        
+        .ai-code-header h5 {
+            margin: 0;
+            color: #6f42c1;
+            font-size: 14px;
+        }
+        
+        .ai-code-copy {
+            background: none;
+            border: none;
+            color: #6f42c1;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .ai-code-copy:hover {
+            background: rgba(111, 66, 193, 0.1);
+        }
+        
+        .ai-code pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .ai-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        
+        .ai-option-btn {
+            background: #2d2d2d;
+            border: 1px solid #6f42c1;
+            color: #6f42c1;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .ai-option-btn:hover {
+            background: #6f42c1;
+            color: white;
+        }
+        
+        .ai-option-btn.active {
+            background: #6f42c1;
+            color: white;
+        }
     </style>
 </head>
 <body>
     {% include 'navbar.html' %}
     
     <div class="container">
+        <!-- Problem Section -->
         <div class="problem-section">
             <h1 class="problem-title">{{ problem.title }}</h1>
             <div class="problem-meta">
                 <span class="difficulty {{ problem.difficulty|lower }}">{{ problem.difficulty }}</span>
             </div>
-            
             <div class="problem-description">
                 {{ problem.description|safe }}
             </div>
         </div>
         
+        <!-- Code Section -->
         <div class="code-section">
+            <!-- Header -->
             <div class="code-header">
                 <h2>Solution</h2>
-                <div class="language-selector">
-                    <label for="language">Language:</label>
-                    <select id="language-select">
-                        <option value="python">Python</option>
-                        <option value="cpp">C++</option>
-                        <option value="java">Java</option>
-                        <option value="c">C</option>
-                    </select>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="language-selector">
+                        <label for="language">Language:</label>
+                        <select id="language-select">
+                            <option value="python">Python</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">Java</option>
+                            <option value="c">C</option>
+                        </select>
+                    </div>
+                    <button type="button" id="assist-btn" class="btn assist-btn">🤖 Assist</button>
                 </div>
             </div>
             
+            <!-- AI Assistance Panel -->
+            <div id="ai-assistance" class="ai-assistance" style="display: none;">
+                <div class="ai-assistance-header">
+                    <h3>🤖 AI Assistant</h3>
+                    <div>
+                        <button type="button" id="ai-solution-btn" class="ai-option-btn active">Solution</button>
+                        <button type="button" id="ai-hint-btn" class="ai-option-btn">Hints</button>
+                        <button type="button" id="close-assist" class="close-assist">×</button>
+                    </div>
+                </div>
+                <div id="ai-content" class="ai-content">
+                    <div class="loading-spinner">Getting AI assistance...</div>
+                </div>
+            </div>
+            
+            <!-- Code Editor -->
             <div class="code-editor-container">
                 <textarea id="code-editor" name="code"></textarea>
                 <input type="hidden" name="language" id="language-input" value="python">
             </div>
             
+            <!-- Input/Output Section -->
             <div class="input-output-section">
                 <div class="input-section">
                     <h3>Custom Input</h3>
@@ -429,12 +636,14 @@
                     <div id="execution-info" class="execution-info"></div>
                 </div>
             </div>
+            
+            <!-- Action Buttons -->
             <div class="action-buttons">
                 <button type="button" id="run-btn" class="btn run-btn">Run Code</button>
                 <button type="button" id="submit-btn" class="btn submit-btn">Submit Solution</button>
             </div>
             
-            <!-- Hidden form for submission -->
+            <!-- Hidden Form -->
             <form id="submit-form" method="post" action="{% url 'compiler' %}" style="display: none;">
                 {% csrf_token %}
                 <input type="hidden" name="problem_id" value="{{ problem.id }}">
@@ -445,207 +654,28 @@
         </div>
     </div>
     
+    <!-- External JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/comment/comment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/selection/active-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{% static 'problem_complete.js' %}"></script>
+    
     <script>
-        const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
-        // Get CSRF token
-        function getCSRFToken() {
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-            if (csrfToken) {
-                return csrfToken.value;
-            }
-            // Fallback: get from cookie
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                const [name, value] = cookie.trim().split('=');
-                if (name === 'csrftoken') {
-                    return value;
-                }
-            }
-            return '';
-        }
-        
-        // Initialize CodeMirror
-        const codeEditor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
-            lineNumbers: true,
-            mode: 'text/x-python',
-            theme: 'dracula',
-            indentUnit: 4,
-            smartIndent: true,
-            tabSize: 4,
-            indentWithTabs: false,
-            lineWrapping: true,
-            matchBrackets: true,
-            autoCloseBrackets: true,
-            styleActiveLine: true,
-            foldGutter: true,
-            gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-        });
-        
-        // Set fixed height to prevent shrinking
-        codeEditor.setSize(null, 400);
-        
-        // Language templates
-        const languageTemplates = {
-            python: `# Write your Python code here
-def main():
-    # Your solution goes here
-    pass
-
-if __name__ == "__main__":
-    main()
-`,
-            cpp: `#include <bits/stc++.h>
-using namespace std;
-
-int main() {
-    // Write your C++ code here
-    
-    return 0;
-}
-`,
-            java: `import java.util.*;
-
-public class Solution {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        
-        // Write your Java code here
-        
-        scanner.close();
-    }
-}
-`,
-            c: `#include <stdio.h>
-#include <stdlib.h>
-
-int main() {
-    // Write your C code here
-    
-    return 0;
-}
-`
-        };
-        
-        // Set initial template
-        codeEditor.setValue(languageTemplates.python);
-        
-        // Handle language change
-        const languageSelect = document.getElementById('language-select');
-        const languageInput = document.getElementById('language-input');
-        
-        languageSelect.addEventListener('change', function() {
-            const language = this.value;
-            languageInput.value = language;
-            
-            // Update CodeMirror mode based on language
-            if (language === 'python') {
-                codeEditor.setOption('mode', 'text/x-python');
-            } else if (language === 'cpp' || language === 'c') {
-                codeEditor.setOption('mode', 'text/x-c++src');
-            } else if (language === 'java') {
-                codeEditor.setOption('mode', 'text/x-java');
-            }
-            
-            // Set template code if editor is empty or user confirms
-            if (codeEditor.getValue().trim() === '' || confirm('Change to ' + language + ' template? This will replace your current code.')) {
-                codeEditor.setValue(languageTemplates[language]);
-            }
-        });
-        
-        // Set initial language value
-        languageInput.value = languageSelect.value;
-        
-        // Run Code functionality
-        document.getElementById('run-btn').addEventListener('click', async function() {
-            if (!isAuthenticated) {
-                window.location.href = "/auth/login/?next={{ request.path }}";
-                return;
-            }
-            const code = codeEditor.getValue();
-            const language = languageSelect.value;
-            const customInput = document.getElementById('custom-input').value;
-            const outputContainer = document.getElementById('output-container');
-            const executionInfo = document.getElementById('execution-info');
-            const runBtn = this;
-            
-            if (!code.trim()) {
-                outputContainer.textContent = 'Error: No code provided';
-                outputContainer.className = 'output-container error';
-                return;
-            }
-            
-            // Show loading state
-            runBtn.disabled = true;
-            runBtn.textContent = 'Running...';
-            outputContainer.textContent = 'Executing code...';
-            outputContainer.className = 'output-container loading';
-            executionInfo.textContent = '';
-            
-            try {
-                const response = await fetch('/compiler/run/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCSRFToken()
-                    },
-                    body: JSON.stringify({
-                        code: code,
-                        language: language,
-                        input: customInput
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    if (result.error) {
-                        outputContainer.textContent = result.error;
-                        outputContainer.className = 'output-container error';
-                    } else {
-                        outputContainer.textContent = result.output || '(No output)';
-                        outputContainer.className = 'output-container success';
-                    }
-                    
-                    if (result.execution_time) {
-                        executionInfo.textContent = `Execution time: ${result.execution_time.toFixed(3)}s`;
-                    }
-                } else {
-                    outputContainer.textContent = result.error || 'An error occurred';
-                    outputContainer.className = 'output-container error';
-                }
-            } catch (error) {
-                outputContainer.textContent = 'Network error: ' + error.message;
-                outputContainer.className = 'output-container error';
-            } finally {
-                runBtn.disabled = false;
-                runBtn.textContent = 'Run Code';
-            }
-        });
-        
-        // Submit Solution functionality
-        document.getElementById('submit-btn').addEventListener('click', function() {
-            if (!isAuthenticated) {
-                window.location.href = "/auth/login/?next={{ request.path }}";
-                return;
-            }
-            const code = codeEditor.getValue();
-            const language = languageSelect.value;
-            
-            if (!code.trim()) {
-                alert('Please write some code before submitting.');
-                return;
-            }
-            
-            // Set form values
-            document.getElementById('submit-code').value = code;
-            document.getElementById('submit-language').value = language;
-            
-            // Submit the form
-            document.getElementById('submit-form').submit();
-        });
-        
-        // Authenticated user check
-        
+        // Debug information
+        console.log('Page loaded');
+        console.log('User authenticated:', document.querySelector('meta[name="user-authenticated"]').content);
+        console.log('Problem ID:', document.querySelector('meta[name="problem-id"]').content);
+        console.log('CodeMirror available:', typeof CodeMirror !== 'undefined');
     </script>
 </body>
 </html>

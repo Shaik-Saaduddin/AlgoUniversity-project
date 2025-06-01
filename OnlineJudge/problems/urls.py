@@ -4,10 +4,15 @@ from . import views
 urlpatterns = [
     path('', views.home_page, name='home-page'),
     path('list/', views.problem_list, name='problem-list'),
-    path('leaderboard/', views.leaderboard, name='leaderboard'),
-    path('manage/problems/', views.admin_problems_list, name='admin_problems_list'),
-    path('manage/problems/add/', views.admin_add_problem, name='admin_add_problem'),
-    path('manage/problems/<int:problem_id>/edit/', views.admin_edit_problem, name='admin_edit_problem'),
-    path('manage/problems/<int:problem_id>/delete/', views.admin_delete_problem, name='admin_delete_problem'),
     path('<int:problem_id>/', views.problem_detail, name='problem-detail'),
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
+    
+    # Admin routes
+    path('admin/problems/', views.admin_problems_list, name='admin_problems_list'),
+    path('admin/problems/add/', views.admin_add_problem, name='admin_add_problem'),
+    path('admin/problems/<int:problem_id>/edit/', views.admin_edit_problem, name='admin_edit_problem'),
+    path('admin/problems/<int:problem_id>/delete/', views.admin_delete_problem, name='admin_delete_problem'),
+    
+    # AI Assist
+    path('<int:problem_id>/assist/', views.ai_assist, name='ai_assist'),
 ]
