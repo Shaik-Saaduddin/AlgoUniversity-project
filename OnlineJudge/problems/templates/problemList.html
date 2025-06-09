@@ -1,152 +1,192 @@
-{% load static %} 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Problems</title>
-    <link rel="stylesheet" href="{% static 'problemList.css' %}">
-    <style>
-        .admin-controls {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 20px;
-        }
-        
-        .admin-title {
-            color: #03e9f4;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        .admin-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .admin-btn {
-            background: #03e9f4;
-            color: #23272f;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .admin-btn:hover {
-            background: #00bcd4;
-            color: #fff;
-        }
-        
-        .admin-btn.add {
-            background: #28a745;
-            color: white;
-        }
-        
-        .admin-btn.add:hover {
-            background: #218838;
-        }
-        
-        .admin-btn.manage {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .admin-btn.manage:hover {
-            background: #5a6268;
-        }
-        
-        .problem-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-        }
-        
-        .problem-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 12px;
-            font-size: 0.85em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .problem-btn.edit {
-            background: #28a745;
-        }
-        
-        .problem-btn.edit:hover {
-            background: #218838;
-        }
-        
-        .problem-btn.delete {
-            background: #dc3545;
-        }
-        
-        .problem-btn.delete:hover {
-            background: #c82333;
-        }
-        #heading {
-            text-align: center;
-            color: #03e9f4;
-            font-size: 2rem;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    {% include 'navbar.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Problems - Codexa{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'problemList.css' %}">
+<style>
+    .admin-controls {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 20px;
+    }
     
-    {% if user.is_staff %}
-    <div class="admin-controls">
-        <div class="admin-title">Admin Controls</div>
-        <div class="admin-buttons">
-            <a href="{% url 'admin_add_problem' %}" class="admin-btn add">Add New Problem</a>
-            <a href="{% url 'admin_problems_list' %}" class="admin-btn manage">Manage All Problems</a>
-        </div>
+    .admin-title {
+        color: #03e9f4;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+    
+    .admin-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .admin-btn {
+        background: #03e9f4;
+        color: #23272f;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .admin-btn:hover {
+        background: #00bcd4;
+        color: #fff;
+    }
+    
+    .admin-btn.add {
+        background: #28a745;
+        color: white;
+    }
+    
+    .admin-btn.add:hover {
+        background: #218838;
+    }
+    
+    .admin-btn.manage {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .admin-btn.manage:hover {
+        background: #5a6268;
+    }
+    
+    .problem-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+    }
+    
+    .problem-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 5px 12px;
+        font-size: 0.85em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .problem-btn.edit {
+        background: #28a745;
+    }
+    
+    .problem-btn.edit:hover {
+        background: #218838;
+    }
+    
+    .problem-btn.delete {
+        background: #dc3545;
+    }
+    
+    .problem-btn.delete:hover {
+        background: #c82333;
+    }
+    
+    #heading {
+        text-align: center;
+        color: #03e9f4;
+        font-size: 2rem;
+        margin-top: 20px;
+    }
+    
+    .solved-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #28a745;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: 500;
+        margin-left: 10px;
+    }
+    
+    .problem-box {
+        position: relative;
+    }
+    
+    .problem-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    
+    .problem-title-section {
+        display: flex;
+        align-items: center;
+        flex: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if user.is_staff %}
+<div class="admin-controls">
+    <div class="admin-title">Admin Controls</div>
+    <div class="admin-buttons">
+        <a href="{% url 'admin_add_problem' %}" class="admin-btn add">Add New Problem</a>
+        <a href="{% url 'admin_problems_list' %}" class="admin-btn manage">Manage All Problems</a>
     </div>
-    {% endif %}
-    
-    <h1 id="heading">PROBLEM LIST</h1>
-    <ul style="list-style: none; padding: 0; margin: 0;">
-        {% for problem in problems %}
-        <li>
-            <div class="problem-box">
-                <a href="{% url 'problem-detail' problem.id %}" style="text-decoration: none; color: inherit;">
-                    <strong>{{ problem.title }}</strong> - {{ problem.difficulty }}
-                    <br>
-                    {{ problem.description|truncatewords:20 }}
-                </a>
-                
-                {% if user.is_staff %}
-                <div class="problem-actions">
-                    <a href="{% url 'admin_edit_problem' problem.id %}" class="problem-btn edit">Edit</a>
-                    <a href="{% url 'admin_delete_problem' problem.id %}" class="problem-btn delete">Delete</a>
+</div>
+{% endif %}
+
+<h1 id="heading">PROBLEM LIST</h1>
+<ul style="list-style: none; padding: 0; margin: 0;">
+    {% for problem in problems %}
+    <li>
+        <div class="problem-box">
+            <div class="problem-header">
+                <div class="problem-title-section">
+                    <a href="{% url 'problem-detail' problem.id %}" style="text-decoration: none; color: inherit;">
+                        <strong>{{ problem.title }}</strong> - {{ problem.difficulty }}
+                    </a>
+                    {% if user.is_authenticated and problem.id in solved_problems %}
+                        <div class="solved-indicator">
+                            <span>✅</span>
+                            <span>Solved</span>
+                        </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
-        </li>
-        {% empty %}
-        <li>
-            No problems available.
-        </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+            
+            <a href="{% url 'problem-detail' problem.id %}" style="text-decoration: none; color: inherit;">
+                {{ problem.description|striptags|truncatewords:20 }}
+            </a>
+            
+            {% if user.is_staff %}
+            <div class="problem-actions">
+                <a href="{% url 'admin_edit_problem' problem.id %}" class="problem-btn edit">Edit</a>
+                <a href="{% url 'admin_delete_problem' problem.id %}" class="problem-btn delete">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+    </li>
+    {% empty %}
+    <li>
+        No problems available.
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

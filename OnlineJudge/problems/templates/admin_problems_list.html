@@ -1,91 +1,88 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Problems</title>
-    <link rel="stylesheet" href="{% static 'admin_problems.css' %}">
-</head>
-<body>
-    {% include 'navbar.html' %}
+
+{% block title %}Admin - Manage Problems - Codexa{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin_problems.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Problem Management</h1>
+        <a href="{% url 'admin_add_problem' %}" class="btn btn-primary">
+            <i class="icon">+</i> Add New Problem
+        </a>
+    </div>
     
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>Problem Management</h1>
-            <a href="{% url 'admin_add_problem' %}" class="btn btn-primary">
-                <i class="icon">+</i> Add New Problem
-            </a>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
         </div>
-        
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endif %}
+    
+    <div class="problems-table-container">
+        <table class="problems-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Difficulty</th>
+                    <th>Test Cases</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for problem in page_obj %}
+                <tr>
+                    <td>{{ problem.id }}</td>
+                    <td>
+                        <a href="{% url 'problem-detail' problem.id %}" class="problem-link">
+                            {{ problem.title }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="difficulty {{ problem.difficulty|lower }}">
+                            {{ problem.difficulty }}
+                        </span>
+                    </td>
+                    <td>{{ problem.testcases.count }}</td>
+                    <td>{{ problem.id|date:"M d, Y" }}</td>
+                    <td class="actions">
+                        <a href="{% url 'admin_edit_problem' problem.id %}" class="btn btn-edit">Edit</a>
+                        <a href="{% url 'admin_delete_problem' problem.id %}" class="btn btn-delete">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-problems">No problems found.</td>
+                </tr>
                 {% endfor %}
-            </div>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="page-link">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
         {% endif %}
         
-        <div class="problems-table-container">
-            <table class="problems-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Difficulty</th>
-                        <th>Test Cases</th>
-                        <th>Created</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for problem in page_obj %}
-                    <tr>
-                        <td>{{ problem.id }}</td>
-                        <td>
-                            <a href="{% url 'problem-detail' problem.id %}" class="problem-link">
-                                {{ problem.title }}
-                            </a>
-                        </td>
-                        <td>
-                            <span class="difficulty {{ problem.difficulty|lower }}">
-                                {{ problem.difficulty }}
-                            </span>
-                        </td>
-                        <td>{{ problem.testcases.count }}</td>
-                        <td>{{ problem.id|date:"M d, Y" }}</td>
-                        <td class="actions">
-                            <a href="{% url 'admin_edit_problem' problem.id %}" class="btn btn-edit">Edit</a>
-                            <a href="{% url 'admin_delete_problem' problem.id %}" class="btn btn-delete">Delete</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="no-problems">No problems found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <span class="current-page">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
         
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?page=1" class="page-link">&laquo; First</a>
-                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
-            {% endif %}
-            
-            <span class="current-page">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-            
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last &raquo;</a>
-            {% endif %}
-        </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last &raquo;</a>
         {% endif %}
     </div>
-</body>
-</html>
+    {% endif %}
+</div>
+{% endblock %}

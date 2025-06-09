@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap");
+
 body {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", Arial, sans-serif;
+  font-family: "Inter", "Poppins", Arial, sans-serif;
   background: linear-gradient(#57606f, #2f3542);
   min-height: 100vh;
   display: flex;
@@ -19,12 +21,17 @@ body {
 }
 
 .title {
-  font-size: 60px;
-  font-weight: 700;
-  color: #03e9f4;
+  font-size: 72px;
+  font-weight: 800;
+  font-family: "Outfit", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #03e9f4, #00bcd4, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 20px;
-  text-shadow: 0 0 10px rgba(3, 233, 244, 0.5);
-  letter-spacing: 2px;
+  text-shadow: none;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
 .subtitle {
@@ -32,6 +39,8 @@ body {
   max-width: 800px;
   margin-bottom: 40px;
   line-height: 1.6;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
 }
 
 .btn {
@@ -40,11 +49,13 @@ body {
   padding: 15px 30px;
   color: #03e9f4;
   font-size: 18px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
   text-decoration: none;
   text-transform: uppercase;
   overflow: hidden;
   margin-top: 20px;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
   border: 2px solid #03e9f4;
   background: transparent;
   border-radius: 5px;
@@ -84,12 +95,16 @@ body {
 .feature-title {
   color: #03e9f4;
   font-size: 24px;
+  font-family: "Outfit", "Inter", sans-serif;
+  font-weight: 600;
   margin-bottom: 15px;
+  letter-spacing: -0.01em;
 }
 
 .feature-description {
   font-size: 16px;
   line-height: 1.6;
+  font-family: "Inter", sans-serif;
 }
 
 .leaderboard-section {
@@ -105,13 +120,17 @@ body {
 .leaderboard-title {
   color: #03e9f4;
   font-size: 28px;
+  font-family: "Outfit", "Inter", sans-serif;
+  font-weight: 600;
   margin-bottom: 20px;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
+  font-family: "Inter", sans-serif;
 }
 
 .leaderboard-table th {
@@ -119,6 +138,7 @@ body {
   padding: 12px;
   text-align: left;
   border-bottom: 2px solid #03e9f4;
+  font-weight: 600;
 }
 
 .leaderboard-table td {
@@ -136,7 +156,8 @@ body {
   margin-top: 20px;
   color: #03e9f4;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
   transition: color 0.3s;
 }
 
@@ -190,14 +211,17 @@ body {
 .potd-title {
   color: #03e9f4;
   font-size: 28px;
+  font-family: "Outfit", "Inter", sans-serif;
   font-weight: 700;
   margin: 0;
   text-shadow: 0 0 10px rgba(3, 233, 244, 0.5);
+  letter-spacing: -0.01em;
 }
 
 .potd-date {
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
+  font-family: "Inter", sans-serif;
   background: rgba(0, 0, 0, 0.3);
   padding: 5px 15px;
   border-radius: 20px;
@@ -214,17 +238,20 @@ body {
 .potd-problem-title {
   color: #fff;
   font-size: 22px;
+  font-family: "Outfit", "Inter", sans-serif;
   font-weight: 600;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
+  letter-spacing: -0.01em;
 }
 
 .difficulty-badge {
   padding: 4px 12px;
   border-radius: 15px;
   font-size: 12px;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -250,6 +277,7 @@ body {
 .potd-description {
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
+  font-family: "Inter", sans-serif;
   margin-bottom: 20px;
   max-height: 100px;
   overflow: hidden;
@@ -280,6 +308,7 @@ body {
   color: #03e9f4;
   text-decoration: none;
   border-radius: 25px;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   transition: all 0.3s ease;
   display: inline-flex;
@@ -310,6 +339,7 @@ body {
   align-items: center;
   gap: 8px;
   color: #4caf50;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   background: rgba(76, 175, 80, 0.1);
   padding: 8px 15px;
@@ -320,6 +350,7 @@ body {
 .no-problem-message {
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
+  font-family: "Inter", sans-serif;
   font-style: italic;
   padding: 40px;
 }
@@ -345,7 +376,7 @@ body {
   }
 
   .title {
-    font-size: 40px;
+    font-size: 48px;
   }
 
   .subtitle {

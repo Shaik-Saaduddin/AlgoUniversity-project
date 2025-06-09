@@ -1,7 +1,7 @@
 // Global variables
 const isAuthenticated = document.querySelector('meta[name="user-authenticated"]').content === "true"
 let codeEditor
-let currentMode = "solution" // 'solution' or 'hints'
+let currentMode = "review" // 'solution' or 'hints'
 
 // Language templates
 const languageTemplates = {
@@ -13,7 +13,7 @@ def main():
 if __name__ == "__main__":
     main()
 `,
-  cpp: `#include <bits/stc++.h>
+  cpp: `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
@@ -141,7 +141,6 @@ function setupRunButton() {
     const customInput = document.getElementById("custom-input").value
     const outputContainer = document.getElementById("output-container")
     const executionInfo = document.getElementById("execution-info")
-    
 
     if (!code.trim()) {
       outputContainer.textContent = "Error: No code provided"
@@ -229,28 +228,28 @@ function setupAIAssist() {
   console.log("Setting up AI assist...")
 
   // Mode switching buttons
-  const solutionBtn = document.getElementById("ai-solution-btn")
-  const hintBtn = document.getElementById("ai-hint-btn")
+  const reviewBtn = document.getElementById("ai-review-btn")
+  const feedbackBtn = document.getElementById("ai-feedback-btn")
 
-  if (solutionBtn) {
-    solutionBtn.addEventListener("click", function () {
-      console.log("Solution mode selected")
-      if (currentMode !== "solution") {
-        currentMode = "solution"
+  if (reviewBtn) {
+    reviewBtn.addEventListener("click", function () {
+      console.log("Review mode selected")
+      if (currentMode !== "review") {
+        currentMode = "review"
         this.classList.add("active")
-        hintBtn.classList.remove("active")
+        feedbackBtn.classList.remove("active")
         getAIAssistance()
       }
     })
   }
 
-  if (hintBtn) {
-    hintBtn.addEventListener("click", function () {
-      console.log("Hints mode selected")
-      if (currentMode !== "hints") {
-        currentMode = "hints"
+  if (feedbackBtn) {
+    feedbackBtn.addEventListener("click", function () {
+      console.log("Feedback mode selected")
+      if (currentMode !== "feedback") {
+        currentMode = "feedback"
         this.classList.add("active")
-        solutionBtn.classList.remove("active")
+        reviewBtn.classList.remove("active")
         getAIAssistance()
       }
     })
@@ -260,8 +259,15 @@ function setupAIAssist() {
   const assistBtn = document.getElementById("assist-btn")
   if (assistBtn) {
     assistBtn.addEventListener("click", () => {
-      console.log("AI Assist button clicked")
+      console.log("AI Review button clicked")
       if (!checkAuthentication()) return
+
+      // Check if user has written any code
+      const userCode = codeEditor.getValue().trim()
+      if (!userCode) {
+        alert("Please write some code first before requesting a review!")
+        return
+      }
 
       const aiAssistance = document.getElementById("ai-assistance")
       if (aiAssistance) {
@@ -333,6 +339,7 @@ async function getAIAssistance() {
         problem_description: problemDescription,
         language: language,
         mode: currentMode,
+        user_code: codeEditor.getValue(), // Add user's code
       }),
     })
 

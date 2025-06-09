@@ -9,7 +9,7 @@
     <meta name="problem-title" content="{{ problem.title|escapejs }}">
     <meta name="problem-description" content="{{ problem.description|striptags|escapejs }}">
     
-    <title>{{ problem.title }} - AlgoU</title>
+    <title>{{ problem.title }} - Codexa</title>
     
     <!-- External CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
@@ -565,6 +565,37 @@
             background: #6f42c1;
             color: white;
         }
+
+        .sample-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+
+        .sample-block {
+            margin-bottom: 20px;
+        }
+
+        .sample-block h4 {
+            color: #6f42c1;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sample-code {
+            background: #1a1a1a !important;
+            color: #f8f8f2 !important;
+            padding: 15px !important;
+            border-radius: 8px !important;
+            overflow-x: auto !important;
+            border: 1px solid #555 !important;
+            margin: 0 !important;
+            font-family: 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            white-space: pre-wrap !important;
+        }
     </style>
 </head>
 <body>
@@ -579,6 +610,25 @@
             </div>
             <div class="problem-description">
                 {{ problem.description|safe }}
+                
+                <!-- Add sample input/output section -->
+                {% if problem.sample_input or problem.sample_output %}
+                <div class="sample-section">
+                    {% if problem.sample_input %}
+                    <div class="sample-block">
+                        <h4>Sample Input:</h4>
+                        <pre class="sample-code">{{ problem.sample_input }}</pre>
+                    </div>
+                    {% endif %}
+                    
+                    {% if problem.sample_output %}
+                    <div class="sample-block">
+                        <h4>Sample Output:</h4>
+                        <pre class="sample-code">{{ problem.sample_output }}</pre>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
         
@@ -597,22 +647,25 @@
                             <option value="c">C</option>
                         </select>
                     </div>
-                    <button type="button" id="assist-btn" class="btn assist-btn">🤖 Assist</button>
+                    <button type="button" id="assist-btn" class="btn assist-btn">🤖 Review</button>
                 </div>
             </div>
             
             <!-- AI Assistance Panel -->
             <div id="ai-assistance" class="ai-assistance" style="display: none;">
                 <div class="ai-assistance-header">
-                    <h3>🤖 AI Assistant</h3>
+                    <h3>🤖 AI Code Reviewer</h3>
                     <div>
-                        <button type="button" id="ai-solution-btn" class="ai-option-btn active">Solution</button>
-                        <button type="button" id="ai-hint-btn" class="ai-option-btn">Hints</button>
+                        <button type="button" id="ai-review-btn" class="ai-option-btn active">Review Code</button>
+                        <button type="button" id="ai-feedback-btn" class="ai-option-btn">Feedback</button>
                         <button type="button" id="close-assist" class="close-assist">×</button>
                     </div>
                 </div>
                 <div id="ai-content" class="ai-content">
-                    <div class="loading-spinner">Getting AI assistance...</div>
+                    <div class="ai-hint">
+                        <h4>📝 Code Review</h4>
+                        <p>Write your code in the editor above, then click "Review Code" to get AI feedback on your solution approach, logic, and potential improvements.</p>
+                    </div>
                 </div>
             </div>
             

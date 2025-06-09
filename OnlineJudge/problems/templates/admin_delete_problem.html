@@ -1,52 +1,58 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Delete Problem</title>
-    <link rel="stylesheet" href="{% static 'admin_problems.css' %}">
-</head>
-<body>
-    {% include 'navbar.html' %}
+
+{% block title %}Admin - Delete Problem - Codexa{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin_problems.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Delete Problem</h1>
+        <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">
+            <i class="icon">←</i> Back to Problems
+        </a>
+    </div>
     
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>Delete Problem</h1>
-            <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">
-                <i class="icon">←</i> Back to Problems
-            </a>
-        </div>
-        
-        <div class="delete-confirmation">
-            <div class="warning-box">
-                <h2>⚠️ Warning</h2>
-                <p>You are about to delete the following problem:</p>
-                
-                <div class="problem-info">
-                    <h3>{{ problem.title }}</h3>
-                    <p><strong>Difficulty:</strong> {{ problem.difficulty }}</p>
-                    <p><strong>Test Cases:</strong> {{ problem.testcases.count }}</p>
-                    <div class="description-preview">
-                        <strong>Description:</strong>
-                        <div class="description-content">{{ problem.description|truncatewords:50|safe }}</div>
-                    </div>
+    <div class="delete-confirmation">
+        <div class="warning-box">
+            <h2>⚠️ Warning</h2>
+            <p>You are about to delete the following problem:</p>
+            
+            <div class="problem-info">
+                <h3>{{ problem.title }}</h3>
+                <p><strong>Difficulty:</strong> {{ problem.difficulty }}</p>
+                <p><strong>Test Cases:</strong> {{ problem.testcases.count }}</p>
+                <div class="description-preview">
+                    <strong>Description:</strong>
+                    <div class="description-content">{{ problem.description|truncatewords:50|safe }}</div>
                 </div>
-                
-                <p class="warning-text">
-                    <strong>This action cannot be undone!</strong> 
-                    All associated test cases and user submissions will also be deleted.
-                </p>
-                
-                <form method="post" class="delete-form">
-                    {% csrf_token %}
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-danger">Yes, Delete Problem</button>
-                        <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
             </div>
+            
+            {% if problem.sample_input %}
+                <p><strong>Sample Input:</strong></p>
+                <pre style="background:#1a1a1a; color:#f8f8f2; padding:12px; border-radius:6px; border:1px solid #444;">{{ problem.sample_input }}</pre>
+            {% endif %}
+            {% if problem.sample_output %}
+                <p><strong>Sample Output:</strong></p>
+                <pre style="background:#1a1a1a; color:#f8f8f2; padding:12px; border-radius:6px; border:1px solid #444;">{{ problem.sample_output }}</pre>
+            {% endif %}
+            
+            <p class="warning-text">
+                <strong>This action cannot be undone!</strong> 
+                All associated test cases and user submissions will also be deleted.
+            </p>
+            
+            <form method="post" class="delete-form">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">Yes, Delete Problem</button>
+                    <a href="{% url 'admin_problems_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

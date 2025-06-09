@@ -10,22 +10,24 @@ body {
 }
 
 .leaderboard-container {
-  width: 80%;
-  max-width: 900px;
+  width: 95% !important;
+  max-width: 1400px !important;
   margin: 40px auto;
-  padding: 30px;
+  padding: 40px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+  min-height: 70vh;
 }
 
 .leaderboard-title {
   text-align: center;
   color: #03e9f4;
-  margin-bottom: 30px;
-  font-size: 2.5rem;
+  margin-bottom: 40px;
+  font-size: 3rem;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
+  font-weight: bold;
 }
 
 .leaderboard-table {
@@ -37,16 +39,18 @@ body {
 .leaderboard-header {
   display: flex;
   background: rgba(3, 233, 244, 0.2);
-  padding: 15px;
+  padding: 20px 15px;
   font-weight: bold;
   border-bottom: 2px solid #03e9f4;
+  font-size: 1.2rem;
 }
 
 .leaderboard-row {
   display: flex;
-  padding: 15px;
+  padding: 20px 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  font-size: 1.1rem;
 }
 
 .leaderboard-row:hover {

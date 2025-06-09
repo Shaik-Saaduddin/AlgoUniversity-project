@@ -5,7 +5,7 @@ from .models import Problem, TestCase
 class ProblemForm(forms.ModelForm):
     class Meta:
         model = Problem
-        fields = ['title', 'description', 'difficulty']
+        fields = ['title', 'description', 'difficulty', 'sample_input', 'sample_output']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -22,7 +22,15 @@ class ProblemForm(forms.ModelForm):
                 ('Easy', 'Easy'),
                 ('Medium', 'Medium'),
                 ('Hard', 'Hard')
-            ])
+            ]),
+            'sample_input': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Sample Input'
+            }),
+            'sample_output': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter Sample Output'
+            }),
         }
 
 class TestCaseForm(forms.ModelForm):
