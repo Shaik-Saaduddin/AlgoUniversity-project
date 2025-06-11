@@ -54,6 +54,17 @@ def compiler_form(request):
         initial_data = {}
         if problem:
             initial_data['problem'] = problem
+        
+        # Check if there is a previous submission to retain code
+        submission_id = request.session.get('submission_id')
+        if submission_id:
+            try:
+                submission = CodeSubmission.objects.get(id=submission_id)
+                initial_data['code'] = submission.code
+                initial_data['language'] = submission.language
+            except CodeSubmission.DoesNotExist:
+                pass
+        
         form = CodeSubmissionForm(initial=initial_data)
     
     context = {
