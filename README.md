@@ -105,10 +105,6 @@ OnlineJudge/
 
 Contributions are welcome! Please fork the repository and submit pull requests for bug fixes, improvements, or new features. Ensure code quality and include tests where applicable.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ---
 
 Thank you for using OnlineJudge! Happy coding!
