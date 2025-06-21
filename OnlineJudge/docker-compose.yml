@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  onlinejudge:
+    image: onlinejudge-image
+    ports:
+      - "8000:8000"
+    volumes:
+      - onlinejudge_db_data:/app/db_data
+    restart: unless-stopped
+
+volumes:
+  onlinejudge_db_data:
