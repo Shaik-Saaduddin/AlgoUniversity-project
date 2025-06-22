@@ -3,3 +3,4 @@ inputs/
 outputs/
 OnlineJudge/Dockerfile
 .env
+keys/
