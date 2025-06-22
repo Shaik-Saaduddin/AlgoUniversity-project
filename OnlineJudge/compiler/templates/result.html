@@ -273,7 +273,7 @@
     <!-- Actions -->
     <div class="actions">
         {% if problem %}
-        <a href="{% url 'compiler' %}?problem_id={{ problem.id }}" class="btn">Try Again</a>
+        <a href="{% url 'problem-detail' problem.id %}" class="btn btn-secondary">Try Again</a>
         {% endif %}
         <a href="{% url 'problem-list' %}" class="btn btn-secondary">Back to Problems</a>
     </div>
