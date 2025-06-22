@@ -2,3 +2,4 @@ myenv/
 inputs/
 outputs/
 OnlineJudge/Dockerfile
+.env
