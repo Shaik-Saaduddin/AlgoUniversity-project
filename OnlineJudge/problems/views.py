@@ -206,6 +206,11 @@ def ai_assist(request, problem_id):
         
         print(f"Language: {language}, Mode: {mode}, Code length: {len(user_code)}")
         
+        # Check if GEMINI_API_KEY is set
+        api_key = os.environ.get('GEMINI_API_KEY')
+        if not api_key:
+            print("GEMINI_API_KEY not set in environment variables")
+        
         # Generate AI code review based on the problem and user code
         assistance_html = generate_ai_assistance(problem, language, mode, user_code)
         print(f"Generated assistance length: {len(assistance_html)}")
@@ -375,6 +380,10 @@ def generate_gemini_code_review(problem, language, mode, user_code, api_key):
     """
     Generate code review using Gemini API with the user's actual code.
     """
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+    
     # Clean the problem description for better API processing
     problem_description = problem.description
     if hasattr(problem_description, 'replace'):

@@ -139,17 +139,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const csrftoken = getCookie("csrftoken")
 
-    // Fetch AI assistance
-    fetch(`/problems/${problemId}/assist/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrftoken,
-      },
-      body: JSON.stringify({
-        problem_description: problemDescription,
-      }),
-    })
+  // Fetch AI assistance
+  // Get user's code from the code editor
+  const codeEditor = document.getElementById("code-editor")
+  const userCode = codeEditor ? codeEditor.value : ""
+
+  // Get selected language
+  const languageSelect = document.getElementById("language-select")
+  const language = languageSelect ? languageSelect.value : "python"
+
+  fetch(`/problems/${problemId}/assist/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify({
+      problem_description: problemDescription,
+      user_code: userCode,
+      language: language,
+    }),
+  })
       .then((response) => response.json())
       .then((data) => {
         const assistContent = document.getElementById("ai-assist-content")

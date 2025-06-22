@@ -6,8 +6,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - onlinejudge_db_data:/app/db_data
+      - ./OnlineJudge:/app
     restart: unless-stopped
-
-volumes:
-  onlinejudge_db_data:
