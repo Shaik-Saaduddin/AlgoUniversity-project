@@ -1,5 +1,19 @@
-<form method="post" action="{% url 'compiler' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Run Code</button>
-</form>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Code Compiler - AlgoU{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'compiler_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Code Compiler</h1>
+    <form method="post" action="{% url 'compiler' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Run Code</button>
+    </form>
+</div>
+{% endblock %}
